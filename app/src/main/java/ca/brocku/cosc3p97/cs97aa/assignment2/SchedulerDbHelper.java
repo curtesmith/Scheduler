@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class SchedulerDbHelper extends SQLiteOpenHelper{
     SQLiteDatabase db;
     private static final String DATABASE_NAME = "Scheduler";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public SchedulerDbHelper(Context context, String name, CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -40,7 +40,7 @@ public class SchedulerDbHelper extends SQLiteOpenHelper{
 
     public void fill(SQLiteDatabase db) {
 
-        String date = "2015-11-15";
+        String date = "2015-11-16";
 
         String fill = "INSERT INTO meetings (datetime, title, duration)" +
                 "VALUES ('" + date + " 09:00', 'Go for a run', 20), " +
