@@ -8,11 +8,12 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class SchedulerDbHelper extends SQLiteOpenHelper{
+public class SchedulerDbHelper extends SQLiteOpenHelper {
     SQLiteDatabase db;
     private static final String DATABASE_NAME = "Scheduler";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 1;
 
     public SchedulerDbHelper(Context context, String name, CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -40,7 +41,7 @@ public class SchedulerDbHelper extends SQLiteOpenHelper{
 
     public void fill(SQLiteDatabase db) {
 
-        String date = "2015-11-16";
+        String date = "2015-11-17";
 
         String fill = "INSERT INTO meetings (datetime, title, duration)" +
                 "VALUES ('" + date + " 09:00', 'Go for a run', 20), " +
@@ -57,7 +58,7 @@ public class SchedulerDbHelper extends SQLiteOpenHelper{
 
         db.execSQL(fill);
 
-        date = "2015-11-17";
+        date = "2015-11-18";
 
         fill = "INSERT INTO meetings (datetime, title, duration)" +
                 "VALUES ('" + date + " 09:00', 'Go for a run again', 20), " +
@@ -76,31 +77,33 @@ public class SchedulerDbHelper extends SQLiteOpenHelper{
     }
 
 
-
-    public String[] selectFromMeetings(String date) {
-        Cursor cursor = db.rawQuery("select rowid, time(datetime) as meeting_time, title from meetings where date(datetime) = '"
+    public List<MeetingsListItem> selectFromMeetings(String date) {
+        final Cursor cursor = db.rawQuery("select rowid, time(datetime) as meeting_time, title from meetings where date(datetime) = '"
                 + date + "' ORDER BY meeting_time ASC", new String[]{});
 
-        ArrayList<String> result = new ArrayList<>();
+        ArrayList<MeetingsListItem> list = new ArrayList<>();
         boolean more = cursor.moveToFirst();
-        while(more) {
-            result.add(cursor.getString(cursor.getColumnIndex("meeting_time")) + " - " + cursor.getString(cursor.getColumnIndex("title")));
+        while (more) {
+            MeetingsListItem item = new MeetingsListItem();
+            item.time = cursor.getString(cursor.getColumnIndex("meeting_time"));
+            item.title = cursor.getString(cursor.getColumnIndex("title"));
+            list.add(item);
             more = cursor.moveToNext();
         }
 
-        return result.toArray(new String[result.size()]);
+        return list;
     }
 
 
     private ArrayList<String> dumpCursor(Cursor cursor) {
         String[] columns = new String[cursor.getColumnCount()];
-        for(int i=0; i<cursor.getColumnCount(); i++) {
+        for (int i = 0; i < cursor.getColumnCount(); i++) {
             columns[i] = cursor.getColumnName(i);
         }
 
         boolean more = cursor.moveToFirst();
         ArrayList<String> result = new ArrayList<>();
-        while(more) {
+        while (more) {
             StringBuilder line = new StringBuilder();
             for (String column : columns) {
                 line.append("{");

@@ -8,12 +8,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -43,8 +43,10 @@ public class MainActivity extends AppCompatActivity {
 
         ListView listView = (ListView) findViewById(R.id.meetings_list);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-               android.R.layout.simple_list_item_1, android.R.id.text1, selectTodaysMeetings());
+        MeetingsListAdapter adapter = new MeetingsListAdapter(this, selectTodaysMeetings());
+
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+//               android.R.layout.simple_list_item_1, android.R.id.text1, selectTodaysMeetings());
 
         listView.setAdapter(adapter);
 
@@ -63,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private String[] selectTodaysMeetings() {
+    private List<MeetingsListItem> selectTodaysMeetings() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         return db.selectFromMeetings(format.format(new Date()));
     }
