@@ -7,7 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class SchedulerDbHelper extends SQLiteOpenHelper {
@@ -40,8 +43,16 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
 
 
     public void fill(SQLiteDatabase db) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String today = dateFormat.format(c.getTime());
 
-        String date = "2015-11-17";
+        c.add(Calendar.DATE, 1);
+        String tomorrow = dateFormat.format(c.getTime());
+
+
+        String date = today;
 
         String fill = "INSERT INTO meetings (datetime, title, duration)" +
                 "VALUES ('" + date + " 09:00', 'Go for a run', 20), " +
@@ -58,7 +69,7 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
 
         db.execSQL(fill);
 
-        date = "2015-11-18";
+        date = tomorrow;
 
         fill = "INSERT INTO meetings (datetime, title, duration)" +
                 "VALUES ('" + date + " 09:00', 'Go for a run again', 20), " +
@@ -92,6 +103,11 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
         }
 
         return list;
+    }
+
+    public void insert(String title, String dateTime, Integer duration) {
+        db.execSQL("INSERT INTO meetings (datetime, title, duration) values ('" +  dateTime
+                + "', '" + title + "', " + duration + ")");
     }
 
 

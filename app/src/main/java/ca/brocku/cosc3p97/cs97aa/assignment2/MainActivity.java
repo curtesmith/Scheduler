@@ -1,7 +1,9 @@
 package ca.brocku.cosc3p97.cs97aa.assignment2;
 
+
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -10,26 +12,29 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static android.widget.Toast.LENGTH_SHORT;
-
-public class MainActivity extends AppCompatActivity implements DayFragment.OnFragmentInteractionListener {
-
-    SchedulerDbHelper db;
+public class MainActivity extends AppCompatActivity
+        implements DayFragment.OnFragmentInteractionListener, MeetingDetailsDialogFragment.MeetingDetailsDialogListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+
         setSupportActionBar(myToolbar);
         setTitle(getTodaysDate());
 
+        loadPager();
+
+    }
+
+    private void loadPager() {
         List<Fragment> fragments = getFragments();
         SchedulerPagerAdapter adapter = new SchedulerPagerAdapter(getSupportFragmentManager(), fragments);
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
@@ -44,14 +49,13 @@ public class MainActivity extends AppCompatActivity implements DayFragment.OnFra
 
 
     private List<Fragment> getFragments() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         List<Fragment> list = new ArrayList<>();
-        try {
-            list.add(DayFragment.newInstance(this, dateFormat.parse("2015-11-17")));
-            list.add(DayFragment.newInstance(this, dateFormat.parse("2015-11-18")));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+
+        Calendar c = Calendar.getInstance();
+        list.add(DayFragment.newInstance(this, c.getTime()));
+        c.add(Calendar.DATE, 1);
+        list.add(DayFragment.newInstance(this, c.getTime()));
+
         return list;
     }
 
@@ -68,7 +72,8 @@ public class MainActivity extends AppCompatActivity implements DayFragment.OnFra
 
         switch (item.getItemId()) {
             case R.id.action_create:
-                Toast.makeText(this, "create function has not yet been implemented", LENGTH_SHORT).show();
+                DialogFragment f = MeetingDetailsDialogFragment.newInstance();
+                f.show(getSupportFragmentManager(), "Create Meeting");
                 return true;
 
             case R.id.action_settings:
@@ -82,5 +87,11 @@ public class MainActivity extends AppCompatActivity implements DayFragment.OnFra
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onDialogPositiveClick(String title) {
+        Toast.makeText(this, "The meeting has been created", Toast.LENGTH_SHORT).show();
+        loadPager();
     }
 }
