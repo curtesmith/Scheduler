@@ -1,23 +1,24 @@
 package ca.brocku.cosc3p97.cs97aa.assignment2;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DayFragment.OnFragmentInteractionListener {
 
     SchedulerDbHelper db;
 
@@ -28,7 +29,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         setTitle(getTodaysDate());
-        fillListView();
+
+        List<Fragment> fragments = getFragments();
+        SchedulerPagerAdapter adapter = new SchedulerPagerAdapter(getSupportFragmentManager(), fragments);
+        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager.setAdapter(adapter);
     }
 
 
@@ -38,36 +43,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void fillListView() {
-        createDatabase();
-
-        ListView listView = (ListView) findViewById(R.id.meetings_list);
-
-        MeetingsListAdapter adapter = new MeetingsListAdapter(this, selectTodaysMeetings());
-
-//        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-//               android.R.layout.simple_list_item_1, android.R.id.text1, selectTodaysMeetings());
-
-        listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                String message = "You clicked the item at position " + position + ", with id " + id;
-                Toast.makeText(adapterView.getContext(), message, LENGTH_SHORT).show();
-            }
-        });
-    }
-
-
-    private void createDatabase() {
-        db = new SchedulerDbHelper(this);
-    }
-
-
-    private List<MeetingsListItem> selectTodaysMeetings() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        return db.selectFromMeetings(format.format(new Date()));
+    private List<Fragment> getFragments() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        List<Fragment> list = new ArrayList<>();
+        try {
+            list.add(DayFragment.newInstance(this, dateFormat.parse("2015-11-17")));
+            list.add(DayFragment.newInstance(this, dateFormat.parse("2015-11-18")));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
 
@@ -92,5 +77,10 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }

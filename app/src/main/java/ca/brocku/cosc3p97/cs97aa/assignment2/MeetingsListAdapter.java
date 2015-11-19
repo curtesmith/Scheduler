@@ -38,6 +38,7 @@ public class MeetingsListAdapter extends BaseAdapter {
     @Override
     public View getView(int index, View view, ViewGroup viewGroup) {
         if(view == null) {
+
             LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.list_item, viewGroup, false);
         }
