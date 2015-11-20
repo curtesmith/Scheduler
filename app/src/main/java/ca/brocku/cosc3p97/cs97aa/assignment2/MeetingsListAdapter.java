@@ -45,9 +45,11 @@ public class MeetingsListAdapter extends BaseAdapter {
 
         TextView time = (TextView) view.findViewById(R.id.time);
         TextView title = (TextView) view.findViewById(R.id.title);
+        TextView duration = (TextView) view.findViewById(R.id.duration);
 
         time.setText(meetingsList.get(index).time);
         title.setText(meetingsList.get(index).title);
+        duration.setText(meetingsList.get(index).duration);
 
         return view;
     }

@@ -1,6 +1,7 @@
 package ca.brocku.cosc3p97.cs97aa.assignment2;
 
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -89,7 +90,7 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
 
 
     public List<MeetingsListItem> selectFromMeetings(String date) {
-        final Cursor cursor = db.rawQuery("select rowid, time(datetime) as meeting_time, title from meetings where date(datetime) = '"
+        final Cursor cursor = db.rawQuery("select rowid, strftime('%H:%M', datetime) as meeting_time, title, duration from meetings where date(datetime) = '"
                 + date + "' ORDER BY meeting_time ASC", new String[]{});
 
         ArrayList<MeetingsListItem> list = new ArrayList<>();
@@ -98,6 +99,7 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
             MeetingsListItem item = new MeetingsListItem();
             item.time = cursor.getString(cursor.getColumnIndex("meeting_time"));
             item.title = cursor.getString(cursor.getColumnIndex("title"));
+            item.duration = cursor.getString(cursor.getColumnIndex("duration"));
             list.add(item);
             more = cursor.moveToNext();
         }
@@ -106,8 +108,11 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
     }
 
     public void insert(String title, String dateTime, Integer duration) {
-        db.execSQL("INSERT INTO meetings (datetime, title, duration) values ('" +  dateTime
-                + "', '" + title + "', " + duration + ")");
+        ContentValues values = new ContentValues();
+        values.put("datetime", dateTime);
+        values.put("title", title);
+        values.put("duration", duration);
+        db.insert("meetings", null, values);
     }
 
 

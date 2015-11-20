@@ -8,8 +8,11 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -19,9 +22,10 @@ import java.util.Date;
 
 
 public class MeetingDetailsDialogFragment  extends DialogFragment
-        implements View.OnClickListener, DatePickerFragment.DatePickerFragmentListener, TimePickerFragment.TimePickerFragmentListener {
+        implements View.OnClickListener, DatePickerFragment.DatePickerFragmentListener, TimePickerFragment.TimePickerFragmentListener, AdapterView.OnItemSelectedListener {
     MeetingDetailsDialogListener listener;
     View view;
+    String selectedDuration = "30";
 
     private int[] TimeStringToInts(String timeString) {
         SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm");
@@ -101,6 +105,17 @@ public class MeetingDetailsDialogFragment  extends DialogFragment
         timeTextView.setText(timeFormat.format(time));
     }
 
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        selectedDuration = (String) parent.getItemAtPosition(position);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        selectedDuration = "0";
+    }
+
     public interface MeetingDetailsDialogListener {
         void onDialogPositiveClick(String title);
     }
@@ -145,6 +160,14 @@ public class MeetingDetailsDialogFragment  extends DialogFragment
         SimpleDateFormat timeFormat = new SimpleDateFormat("kk:mm");
         timeTextView.setText(timeFormat.format(new Date()));
 
+        Spinner durationSpinner = (Spinner) view.findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.durations_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        durationSpinner.setAdapter(adapter);
+        durationSpinner.setSelection(getIndex(durationSpinner, selectedDuration));
+        durationSpinner.setOnItemSelectedListener(this);
+
         builder.setView(view)
                 .setPositiveButton("Create", new DialogInterface.OnClickListener() {
                     @Override
@@ -154,8 +177,10 @@ public class MeetingDetailsDialogFragment  extends DialogFragment
                         String time = ((TextView) view.findViewById(R.id.timeTextView)).getText().toString();
                         String datetime = String.format("%s %s", date, time);
 
+                        Integer duration = Integer.valueOf(selectedDuration);
+
                         SchedulerDbHelper db = new SchedulerDbHelper(getActivity());
-                        db.insert(title, datetime, 30);
+                        db.insert(title, datetime, duration);
                         db.close();
 
 
@@ -171,6 +196,16 @@ public class MeetingDetailsDialogFragment  extends DialogFragment
                 });
 
         return builder.create();
+    }
+
+    private int getIndex(Spinner spinner, String selectedValue) {
+        int index = -1;
+        for(int i=0; i<spinner.getCount(); i++) {
+            if(spinner.getItemAtPosition(i).equals(selectedValue)) {
+                index = i;
+            }
+        }
+        return index;
     }
 
 }

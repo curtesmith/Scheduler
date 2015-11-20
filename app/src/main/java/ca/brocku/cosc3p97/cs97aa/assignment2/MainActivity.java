@@ -19,7 +19,9 @@ import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements DayFragment.OnFragmentInteractionListener, MeetingDetailsDialogFragment.MeetingDetailsDialogListener {
+        implements DayFragment.OnFragmentInteractionListener,
+        MeetingDetailsDialogFragment.MeetingDetailsDialogListener,
+ViewPager.OnPageChangeListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity
         List<Fragment> fragments = getFragments();
         SchedulerPagerAdapter adapter = new SchedulerPagerAdapter(getSupportFragmentManager(), fragments);
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager.addOnPageChangeListener(this);
         pager.setAdapter(adapter);
     }
 
@@ -45,6 +48,14 @@ public class MainActivity extends AppCompatActivity
     private String getTodaysDate() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM d, yyyy");
         return simpleDateFormat.format(new Date());
+    }
+
+
+    private String getTomorrowsDate() {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, 1);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy");
+        return dateFormat.format(c.getTime());
     }
 
 
@@ -93,5 +104,24 @@ public class MainActivity extends AppCompatActivity
     public void onDialogPositiveClick(String title) {
         Toast.makeText(this, "The meeting has been created", Toast.LENGTH_SHORT).show();
         loadPager();
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        //ignore
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if(position == 0) {
+            setTitle(getTodaysDate());
+        } else {
+            setTitle(getTomorrowsDate());
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+        //ignore
     }
 }
