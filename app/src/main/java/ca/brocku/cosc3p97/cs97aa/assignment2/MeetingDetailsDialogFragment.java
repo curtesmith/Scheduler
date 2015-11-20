@@ -21,8 +21,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-public class MeetingDetailsDialogFragment  extends DialogFragment
-        implements View.OnClickListener, DatePickerFragment.DatePickerFragmentListener, TimePickerFragment.TimePickerFragmentListener, AdapterView.OnItemSelectedListener {
+public class MeetingDetailsDialogFragment extends DialogFragment
+        implements View.OnClickListener, DatePickerFragment.DatePickerFragmentListener,
+        TimePickerFragment.TimePickerFragmentListener, AdapterView.OnItemSelectedListener {
+
     MeetingDetailsDialogListener listener;
     View view;
     String selectedDuration = "30";
@@ -66,7 +68,7 @@ public class MeetingDetailsDialogFragment  extends DialogFragment
 
     @Override
     public void onClick(View view) {
-        if(view.getId() == R.id.datePickerImageButton) {
+        if (view.getId() == R.id.datePickerImageButton) {
             TextView dateTextView = (TextView) this.view.findViewById(R.id.dateTextView);
             int[] ints = DateStringToInts(dateTextView.getText().toString());
             Bundle args = new Bundle();
@@ -77,7 +79,7 @@ public class MeetingDetailsDialogFragment  extends DialogFragment
             fragment.setListener(this);
             fragment.setArguments(args);
             fragment.show(getFragmentManager(), "Pick a date");
-        } else if(view.getId() == R.id.timePickerImageButton) {
+        } else if (view.getId() == R.id.timePickerImageButton) {
             TextView timeTextView = (TextView) this.view.findViewById(R.id.timeTextView);
             int[] ints = TimeStringToInts(timeTextView.getText().toString());
             Bundle args = new Bundle();
@@ -122,7 +124,7 @@ public class MeetingDetailsDialogFragment  extends DialogFragment
 
 
     @Override
-    public void onAttach(Activity activity){
+    public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
             listener = (MeetingDetailsDialogListener) activity;
@@ -137,14 +139,14 @@ public class MeetingDetailsDialogFragment  extends DialogFragment
         MeetingDetailsDialogFragment f = new MeetingDetailsDialogFragment();
         return f;
     }
-    
+
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        view  = inflater.inflate(R.layout.fragment_meeting_details, null);
+        view = inflater.inflate(R.layout.fragment_meeting_details, null);
 
         ImageButton datePickerButton = (ImageButton) view.findViewById(R.id.datePickerImageButton);
         datePickerButton.setOnClickListener(this);
@@ -200,8 +202,8 @@ public class MeetingDetailsDialogFragment  extends DialogFragment
 
     private int getIndex(Spinner spinner, String selectedValue) {
         int index = -1;
-        for(int i=0; i<spinner.getCount(); i++) {
-            if(spinner.getItemAtPosition(i).equals(selectedValue)) {
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).equals(selectedValue)) {
                 index = i;
             }
         }
