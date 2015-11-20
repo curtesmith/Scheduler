@@ -21,6 +21,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements DayFragment.OnFragmentInteractionListener,
         MeetingDetailsDialogFragment.MeetingDetailsDialogListener,
+        ReviewMeetingDetailsDialogFragment.ReviewMeetingDetailsDialogListener,
 ViewPager.OnPageChangeListener{
 
     @Override
@@ -36,7 +37,7 @@ ViewPager.OnPageChangeListener{
 
     }
 
-    private void loadPager() {
+    public void loadPager() {
         List<Fragment> fragments = getFragments();
         SchedulerPagerAdapter adapter = new SchedulerPagerAdapter(getSupportFragmentManager(), fragments);
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
@@ -106,6 +107,7 @@ ViewPager.OnPageChangeListener{
         loadPager();
     }
 
+
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         //ignore
@@ -123,5 +125,11 @@ ViewPager.OnPageChangeListener{
     @Override
     public void onPageScrollStateChanged(int state) {
         //ignore
+    }
+
+    @Override
+    public void onReviewMeetingDialogPositiveClick() {
+        Toast.makeText(this, "The meeting has been deleted", Toast.LENGTH_SHORT).show();
+        loadPager();
     }
 }

@@ -90,14 +90,16 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
 
 
     public List<MeetingsListItem> selectFromMeetings(String date) {
-        final Cursor cursor = db.rawQuery("select rowid, strftime('%H:%M', datetime) as meeting_time, title, duration from meetings where date(datetime) = '"
+        final Cursor cursor = db.rawQuery("select rowid, date(datetime) as meeting_date, strftime('%H:%M', datetime) as meeting_time, title, duration from meetings where date(datetime) = '"
                 + date + "' ORDER BY meeting_time ASC", new String[]{});
 
         ArrayList<MeetingsListItem> list = new ArrayList<>();
         boolean more = cursor.moveToFirst();
         while (more) {
             MeetingsListItem item = new MeetingsListItem();
+            item.id = cursor.getInt(cursor.getColumnIndex("rowid"));
             item.time = cursor.getString(cursor.getColumnIndex("meeting_time"));
+            item.date = cursor.getString(cursor.getColumnIndex("meeting_date"));
             item.title = cursor.getString(cursor.getColumnIndex("title"));
             item.duration = cursor.getString(cursor.getColumnIndex("duration"));
             list.add(item);
@@ -113,6 +115,11 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
         values.put("title", title);
         values.put("duration", duration);
         db.insert("meetings", null, values);
+    }
+
+
+    public void delete(int id) {
+        db.delete("meetings", "rowid=" + id, null);
     }
 
 

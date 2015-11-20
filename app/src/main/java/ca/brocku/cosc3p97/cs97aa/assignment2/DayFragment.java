@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,6 +18,7 @@ import java.util.List;
 public class DayFragment extends Fragment {
     private Activity activity;
     private Date date;
+    private List<MeetingsListItem> meetings;
 
 
     private OnFragmentInteractionListener mListener;
@@ -61,8 +61,16 @@ public class DayFragment extends Fragment {
         listView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                String message = "You clicked the item at position " + position + ", with id " + id;
-                Toast.makeText(adapterView.getContext(), message, Toast.LENGTH_SHORT).show();
+                MeetingsListItem item = meetings.get(position);
+                ReviewMeetingDetailsDialogFragment f = ReviewMeetingDetailsDialogFragment.newInstance();
+                Bundle args = new Bundle();
+                args.putInt("id", item.id);
+                args.putString("title", item.title);
+                args.putString("date", item.date);
+                args.putString("time", item.time);
+                args.putString("duration", item.duration);
+                f.setArguments(args);
+                f.show(getFragmentManager(), "Review Meeting");
             }
         });
 
@@ -73,7 +81,8 @@ public class DayFragment extends Fragment {
 
     private List<MeetingsListItem> selectMeetings(SchedulerDbHelper db, Date date) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        return db.selectFromMeetings(format.format(date));
+        meetings = db.selectFromMeetings(format.format(date));
+        return meetings;
     }
 
 
