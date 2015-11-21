@@ -91,7 +91,8 @@ ViewPager.OnPageChangeListener{
                 return true;
 
             case R.id.action_view_contacts:
-                Intent intent = new Intent(Intent.ACTION_SEARCH, ContactsContract.Contacts.CONTENT_URI);
+                Intent intent = new Intent(Intent.ACTION_INSERT_OR_EDIT);
+                intent.setType(ContactsContract.Contacts.CONTENT_ITEM_TYPE);
                 startActivity(intent);
 
                 return true;
