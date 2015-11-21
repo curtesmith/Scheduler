@@ -1,8 +1,10 @@
 package ca.brocku.cosc3p97.cs97aa.assignment2;
 
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -86,6 +88,12 @@ ViewPager.OnPageChangeListener{
             case R.id.action_create:
                 DialogFragment f = MeetingDetailsDialogFragment.newInstance();
                 f.show(getSupportFragmentManager(), "Create Meeting");
+                return true;
+
+            case R.id.action_view_contacts:
+                Intent intent = new Intent(Intent.ACTION_SEARCH, ContactsContract.Contacts.CONTENT_URI);
+                startActivity(intent);
+
                 return true;
 
             case R.id.action_settings:

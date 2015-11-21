@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Assignment2</string>
     <string name="action_create">Create</string>
+    <string name="action_view_contacts">View Contacts</string>
     <string name="action_settings">Settings</string>
 
 <!-- TODO: Remove or change this placeholder text -->
