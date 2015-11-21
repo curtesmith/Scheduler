@@ -31,12 +31,20 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        final String drop = "DROP TABLE IF EXISTS meetings;";
-        db.execSQL(drop);
+        final String dropMeetings = "DROP TABLE IF EXISTS meetings;";
+        db.execSQL(dropMeetings);
 
-        final String create = "CREATE TABLE IF NOT EXISTS meetings " +
-                "( title TEXT NOT NULL, datetime TEXT NOT NULL, duration INTEGER);";
-        db.execSQL(create);
+        final String createMeetings = "CREATE TABLE IF NOT EXISTS meetings " +
+                "(title TEXT NOT NULL, datetime TEXT NOT NULL, duration INTEGER);";
+        db.execSQL(createMeetings);
+
+        final String dropInvitees = "DROP TABLE IF EXISTS invitees;";
+        db.execSQL(dropInvitees);
+
+        final String createInvitees = "CREATE TABLE IF NOT EXISTS invitees " +
+                "(meeting_id INTEGER NOT NULL, name TEXT NOT NULL, " +
+                "FOREIGN KEY(meeting_id) REFERENCES meetings(rowid))";
+        db.execSQL(createInvitees);
 
         fill(db);
 
@@ -94,31 +102,56 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
                 + date + "' ORDER BY meeting_time ASC", new String[]{});
 
         ArrayList<MeetingsListItem> list = new ArrayList<>();
-        boolean more = cursor.moveToFirst();
-        while (more) {
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
             MeetingsListItem item = new MeetingsListItem();
             item.id = cursor.getInt(cursor.getColumnIndex("rowid"));
             item.time = cursor.getString(cursor.getColumnIndex("meeting_time"));
             item.date = cursor.getString(cursor.getColumnIndex("meeting_date"));
             item.title = cursor.getString(cursor.getColumnIndex("title"));
             item.duration = cursor.getString(cursor.getColumnIndex("duration"));
+            item.invitees = selectFromInvitees(item.id);
             list.add(item);
-            more = cursor.moveToNext();
+            cursor.moveToNext();
         }
 
         return list;
     }
 
-    public void insert(String title, String dateTime, Integer duration) {
+
+    private ArrayList<String> selectFromInvitees(int meetingID) {
+        final Cursor cursor = db.rawQuery("select name from invitees where meeting_id = " + meetingID + " ORDER BY name ASC", new String[]{});
+        ArrayList<String> invitees = new ArrayList<>();
+
+        if(cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                invitees.add(cursor.getString(cursor.getColumnIndex("name")));
+                cursor.moveToNext();
+            }
+        }
+
+        return invitees;
+    }
+
+    public void insert(String title, String dateTime, Integer duration, List<ContactsListItem> invitees) {
         ContentValues values = new ContentValues();
         values.put("datetime", dateTime);
         values.put("title", title);
         values.put("duration", duration);
-        db.insert("meetings", null, values);
+        long meetingID = db.insert("meetings", null, values);
+
+        for(int i=0; i<invitees.size(); i++) {
+            values.clear();
+            values.put("meeting_id", meetingID);
+            values.put("name", invitees.get(i).name);
+            db.insert("invitees", null, values);
+        }
     }
 
 
     public void delete(int id) {
+        db.delete("invitees", "meeting_id=" + id, null);
         db.delete("meetings", "rowid=" + id, null);
     }
 

@@ -111,4 +111,33 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Contacts:"
+            android:id="@+id/contactsLabelTextView"
+            android:layout_weight="1"
+            android:allowUndo="true" />
+
+        <ListView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/contactsListView"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/contactsImageButton"
+            android:layout_weight="1"
+            android:src="@drawable/contacts_ico" />
+    </LinearLayout>
+
 </LinearLayout>

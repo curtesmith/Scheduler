@@ -69,6 +69,7 @@ public class DayFragment extends Fragment {
                 args.putString("date", item.date);
                 args.putString("time", item.time);
                 args.putString("duration", item.duration);
+                args.putStringArrayList("invitees", item.invitees);
                 f.setArguments(args);
                 f.show(getFragmentManager(), "Review Meeting");
             }

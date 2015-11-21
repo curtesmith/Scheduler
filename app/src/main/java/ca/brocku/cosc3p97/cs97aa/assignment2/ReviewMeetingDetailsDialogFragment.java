@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -58,6 +59,12 @@ public class ReviewMeetingDetailsDialogFragment extends DialogFragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         duration.setAdapter(adapter);
         duration.setSelection(getIndex(duration, getArguments().getString("duration")));
+
+        ListView contactsListView = (ListView) view.findViewById(R.id.contactsListView);
+
+        ArrayAdapter<String> contactsAdapter = new ArrayAdapter<>(view.getContext(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, getArguments().getStringArrayList("invitees"));
+        contactsListView.setAdapter(contactsAdapter);
 
         builder.setView(view)
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {

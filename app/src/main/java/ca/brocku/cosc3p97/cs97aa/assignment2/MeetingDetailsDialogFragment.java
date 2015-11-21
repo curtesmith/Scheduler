@@ -12,22 +12,27 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 
 public class MeetingDetailsDialogFragment extends DialogFragment
         implements View.OnClickListener, DatePickerFragment.DatePickerFragmentListener,
-        TimePickerFragment.TimePickerFragmentListener, AdapterView.OnItemSelectedListener {
+        TimePickerFragment.TimePickerFragmentListener, AdapterView.OnItemSelectedListener,
+        ContactPickerDialogFragment.ContactPickerListener{
 
-    MeetingDetailsDialogListener listener;
-    View view;
-    String selectedDuration = "30";
+    private MeetingDetailsDialogListener listener;
+    private View view;
+    private String selectedDuration = "30";
+    private List<ContactsListItem> selectedContacts = new ArrayList<>();
 
     private int[] TimeStringToInts(String timeString) {
         SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm");
@@ -78,7 +83,7 @@ public class MeetingDetailsDialogFragment extends DialogFragment
             DatePickerFragment fragment = new DatePickerFragment();
             fragment.setListener(this);
             fragment.setArguments(args);
-            fragment.show(getFragmentManager(), "Pick a date");
+            fragment.show(getFragmentManager(), "Date picker");
         } else if (view.getId() == R.id.timePickerImageButton) {
             TextView timeTextView = (TextView) this.view.findViewById(R.id.timeTextView);
             int[] ints = TimeStringToInts(timeTextView.getText().toString());
@@ -88,7 +93,13 @@ public class MeetingDetailsDialogFragment extends DialogFragment
             TimePickerFragment timePickerFragment = new TimePickerFragment();
             timePickerFragment.setListener(this);
             timePickerFragment.setArguments(args);
-            timePickerFragment.show(getFragmentManager(), "Pick a time");
+            timePickerFragment.show(getFragmentManager(), "Time picker");
+        } else if(view.getId() == R.id.contactsImageButton) {
+//            Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+//            startActivity(intent);
+            ContactPickerDialogFragment contactPicker = ContactPickerDialogFragment.newInstance();
+            contactPicker.setListener(this);
+            contactPicker.show(getFragmentManager(), "Contact picker");
         }
     }
 
@@ -116,6 +127,15 @@ public class MeetingDetailsDialogFragment extends DialogFragment
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
         selectedDuration = "0";
+    }
+
+    @Override
+    public void onContactsSelected(List<ContactsListItem> selectedContacts) {
+        this.selectedContacts = selectedContacts;
+        ListView contactsListView = (ListView) view.findViewById(R.id.contactsListView);
+        ArrayAdapter<String> contactsAdapter = new ArrayAdapter<>(view.getContext(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, ContactsListItem.getNames(selectedContacts));
+        contactsListView.setAdapter(contactsAdapter);
     }
 
     public interface MeetingDetailsDialogListener {
@@ -154,6 +174,9 @@ public class MeetingDetailsDialogFragment extends DialogFragment
         ImageButton timePickerButton = (ImageButton) view.findViewById(R.id.timePickerImageButton);
         timePickerButton.setOnClickListener(this);
 
+        ImageButton contactPickerButton = (ImageButton) view.findViewById(R.id.contactsImageButton);
+        contactPickerButton.setOnClickListener(this);
+
         TextView dateTextView = (TextView) view.findViewById(R.id.dateTextView);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateTextView.setText(dateFormat.format(new Date()));
@@ -161,6 +184,13 @@ public class MeetingDetailsDialogFragment extends DialogFragment
         TextView timeTextView = (TextView) view.findViewById(R.id.timeTextView);
         SimpleDateFormat timeFormat = new SimpleDateFormat("kk:mm");
         timeTextView.setText(timeFormat.format(new Date()));
+
+        ListView contactsListView = (ListView) view.findViewById(R.id.contactsListView);
+
+        ArrayAdapter<String> contactsAdapter = new ArrayAdapter<>(view.getContext(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, new String[] { "nobody"});
+        contactsListView.setAdapter(contactsAdapter);
+
 
         Spinner durationSpinner = (Spinner) view.findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
@@ -182,7 +212,7 @@ public class MeetingDetailsDialogFragment extends DialogFragment
                         Integer duration = Integer.valueOf(selectedDuration);
 
                         SchedulerDbHelper db = new SchedulerDbHelper(getActivity());
-                        db.insert(title, datetime, duration);
+                        db.insert(title, datetime, duration, selectedContacts);
                         db.close();
 
 
