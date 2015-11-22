@@ -36,7 +36,6 @@ ViewPager.OnPageChangeListener{
         setTitle(getTodaysDate());
 
         loadPager();
-
     }
 
     public void loadPager() {
@@ -83,6 +82,7 @@ ViewPager.OnPageChangeListener{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        SchedulerDbHelper dbHelper = new SchedulerDbHelper(this);
 
         switch (item.getItemId()) {
             case R.id.action_create:
@@ -94,15 +94,61 @@ ViewPager.OnPageChangeListener{
                 Intent intent = new Intent(Intent.ACTION_INSERT_OR_EDIT);
                 intent.setType(ContactsContract.Contacts.CONTENT_ITEM_TYPE);
                 startActivity(intent);
-
                 return true;
 
-            case R.id.action_settings:
+            case R.id.action_push_today:
+                Date today = new Date();
+                dbHelper.push(today, getNextDate(today));
+                dbHelper.close();
+                loadPager();
+                Toast.makeText(this, "Today's meetings have been pushed", Toast.LENGTH_SHORT).show();
                 return true;
 
+            case R.id.action_delete_expired:
+                dbHelper.deleteBefore(new Date());
+                dbHelper.close();
+                loadPager();
+                Toast.makeText(this, "Expired meetings have been deleted", Toast.LENGTH_SHORT).show();
+                return true;
+
+            case R.id.action_delete_today:
+                dbHelper.delete(new Date());
+                dbHelper.close();
+                loadPager();
+                Toast.makeText(this, "Today's meetings have been deleted", Toast.LENGTH_SHORT).show();
+                return true;
+
+            case R.id.action_delete_all:
+                dbHelper.deleteAll();
+                dbHelper.close();
+                loadPager();
+                Toast.makeText(this, "All meetings have been deleted", Toast.LENGTH_SHORT).show();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private Date getNextDate(Date fromDate) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fromDate);
+
+        int daysToAdd;
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+        switch (dayOfWeek) {
+            case 1:
+                daysToAdd = 6;
+                break;
+            case 6:
+                daysToAdd = 3;
+                break;
+            default:
+                daysToAdd = 1;
+        }
+
+        calendar.add(Calendar.DATE, daysToAdd);
+        return calendar.getTime();
     }
 
     @Override

@@ -9,11 +9,26 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_view_contacts"
-        android:orderInCategory="100"
+        android:orderInCategory="200"
         android:title="@string/action_view_contacts"
         android:icon="@drawable/contacts_ico"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_push_today"
+        android:title="@string/action_push_today"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_delete_expired"
+        android:title="@string/action_delete_expired"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_delete_today"
+        android:title="@string/action_delete_today"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_delete_all"
+        android:title="@string/action_delete_all"
+        app:showAsAction="never" />
 
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+    />
 </menu>

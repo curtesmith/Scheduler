@@ -72,11 +72,13 @@ public class ContactPickerDialogFragment extends DialogFragment implements OnChe
         List<ContactsListItem> contacts = new ArrayList<>();
 
         Cursor c = getActivity().getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+
         c.moveToFirst();
-        while(!c.isLast()) {
+        while (!c.isAfterLast()) {
             contacts.add(new ContactsListItem(c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))));
             c.moveToNext();
         }
+
         return contacts;
     }
 

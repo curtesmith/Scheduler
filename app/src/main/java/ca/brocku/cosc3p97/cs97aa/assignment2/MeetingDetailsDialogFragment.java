@@ -212,7 +212,7 @@ public class MeetingDetailsDialogFragment extends DialogFragment
                         Integer duration = Integer.valueOf(selectedDuration);
 
                         SchedulerDbHelper db = new SchedulerDbHelper(getActivity());
-                        db.insert(title, datetime, duration, selectedContacts);
+                        db.insert(title, date, time, duration, selectedContacts);
                         db.close();
 
 
