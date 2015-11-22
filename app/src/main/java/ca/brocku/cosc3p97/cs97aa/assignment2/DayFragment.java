@@ -1,7 +1,6 @@
 package ca.brocku.cosc3p97.cs97aa.assignment2;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -20,8 +18,6 @@ public class DayFragment extends Fragment {
     private Date date;
     private List<MeetingsListItem> meetings;
 
-
-    private OnFragmentInteractionListener mListener;
 
     public static DayFragment newInstance(Activity main, Date date) {
         DayFragment fragment = new DayFragment();
@@ -34,6 +30,7 @@ public class DayFragment extends Fragment {
     public void setActivity(Activity activity) {
         this.activity = activity;
     }
+
 
     public void setDate(Date date) {
         this.date = date;
@@ -80,44 +77,22 @@ public class DayFragment extends Fragment {
         return view;
     }
 
+
     private List<MeetingsListItem> selectMeetings(SchedulerDbHelper db, Date date) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        meetings = db.selectFromMeetings(format.format(date));
+        meetings = db.selectFromMeetings(DateHelper.formatShortDate(date));
         return meetings;
     }
-
 
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
+
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
     }
 
 }
