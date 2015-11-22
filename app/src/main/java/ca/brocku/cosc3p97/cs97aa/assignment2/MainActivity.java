@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         //ignore
     }
-    
+
 
     @Override
     public void onPageSelected(int position) {

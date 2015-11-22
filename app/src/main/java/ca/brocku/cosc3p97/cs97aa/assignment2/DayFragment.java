@@ -19,6 +19,19 @@ public class DayFragment extends Fragment {
     private List<MeetingsListItem> meetings;
 
 
+    /**
+     * Every Fragment class must have an empty default constructor
+     */
+    public DayFragment() { }
+
+
+    /**
+     * Since the default constructor must be empty this method will serve as a custom factory
+     * to create new instances of this class.
+     * @param main A reference to the main activity
+     * @param date The date value that is associated with this fragment
+     * @return
+     */
     public static DayFragment newInstance(Activity main, Date date) {
         DayFragment fragment = new DayFragment();
         fragment.setActivity(main);
@@ -27,32 +40,37 @@ public class DayFragment extends Fragment {
     }
 
 
+    /**
+     * Set the private activity field.
+     * @param activity The activity reference that will be saved in the private activity field
+     */
     public void setActivity(Activity activity) {
         this.activity = activity;
     }
 
 
+    /**
+     * Set the private date field.
+     * @param date The date value that will be saved in the private date field
+     */
     public void setDate(Date date) {
         this.date = date;
     }
 
 
-    public DayFragment() {
-        // Required empty public constructor
-    }
-
-
+    /**
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_day, container, false);
-
-        SchedulerDbHelper db = new SchedulerDbHelper(getContext());
-
         ListView listView = (ListView) view.findViewById(R.id.meetings_list);
-
-        MeetingsListAdapter adapter = new MeetingsListAdapter(activity, selectMeetings(db, date));
-
+        MeetingsListAdapter adapter = new MeetingsListAdapter(activity, selectMeetings(date));
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new OnItemClickListener() {
@@ -72,27 +90,20 @@ public class DayFragment extends Fragment {
             }
         });
 
-        db.close();
-
         return view;
     }
 
 
-    private List<MeetingsListItem> selectMeetings(SchedulerDbHelper db, Date date) {
+    /**
+     * Retrieve the meetings from the database matching on the meeting date parameter.
+     *
+     * @param date The date that the selection query will use to find matching meetings
+     * @return returns a list of meetings that match the requested date
+     */
+    private List<MeetingsListItem> selectMeetings(Date date) {
+        SchedulerDbHelper db = new SchedulerDbHelper(getContext());
         meetings = db.selectFromMeetings(DateHelper.formatShortDate(date));
+        db.close();
         return meetings;
     }
-
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
 }
