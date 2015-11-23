@@ -26,7 +26,7 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
     private static final String DATE_COLUMN_NAME = "meeting_date";
     private static final String TIME_COLUMN_NAME = "_meeting_time";
     private static final String DURATION_COLUMN_NAME = "duration";
-    private static final String MEETINGID_COLUMN_NAME = "meeting_id";
+    private static final String MEETING_ID_COLUMN_NAME = "meeting_id";
     private static final String NAME_COLUMN_NAME = "name";
 
 
@@ -55,8 +55,8 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
         db.execSQL(dropInvitees);
 
         final String createInvitees = "CREATE TABLE IF NOT EXISTS " + INVITEES_TABLE_NAME +
-                " (" + MEETINGID_COLUMN_NAME + " INTEGER NOT NULL, " + NAME_COLUMN_NAME + " TEXT NOT NULL, " +
-                "FOREIGN KEY(" + MEETINGID_COLUMN_NAME + ") REFERENCES " +  MEETINGS_TABLE_NAME + "(rowid))";
+                " (" + MEETING_ID_COLUMN_NAME + " INTEGER NOT NULL, " + NAME_COLUMN_NAME + " TEXT NOT NULL, " +
+                "FOREIGN KEY(" + MEETING_ID_COLUMN_NAME + ") REFERENCES " +  MEETINGS_TABLE_NAME + "(rowid))";
         db.execSQL(createInvitees);
 
         fill(db);
@@ -142,7 +142,7 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
 
     private ArrayList<String> selectFromInvitees(int meetingID) {
         final Cursor cursor = db.rawQuery("select " + NAME_COLUMN_NAME + " from " + INVITEES_TABLE_NAME +
-                " where " + MEETINGID_COLUMN_NAME + " = " + meetingID + " ORDER BY " + NAME_COLUMN_NAME + " ASC", new String[]{});
+                " where " + MEETING_ID_COLUMN_NAME + " = " + meetingID + " ORDER BY " + NAME_COLUMN_NAME + " ASC", new String[]{});
         ArrayList<String> invitees = new ArrayList<>();
 
         if(cursor.getCount() > 0) {
@@ -179,7 +179,7 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
 
         for(int i=0; i<invitees.size(); i++) {
             values.clear();
-            values.put(MEETINGID_COLUMN_NAME, meetingID);
+            values.put(MEETING_ID_COLUMN_NAME, meetingID);
             values.put(NAME_COLUMN_NAME, invitees.get(i).name);
             db.insert(INVITEES_TABLE_NAME, null, values);
         }
@@ -187,7 +187,7 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
 
 
     public void delete(int id) {
-        db.delete(INVITEES_TABLE_NAME, MEETINGID_COLUMN_NAME + "=" + id, null);
+        db.delete(INVITEES_TABLE_NAME, MEETING_ID_COLUMN_NAME + "=" + id, null);
         db.delete(MEETINGS_TABLE_NAME, "rowid=" + id, null);
     }
 

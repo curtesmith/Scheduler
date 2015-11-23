@@ -30,7 +30,7 @@ public class DayFragment extends Fragment {
      * to create new instances of this class.
      * @param main A reference to the main activity
      * @param date The date value that is associated with this fragment
-     * @return
+     * @return An reference to the DayFragment that was created
      */
     public static DayFragment newInstance(Activity main, Date date) {
         DayFragment fragment = new DayFragment();
@@ -59,11 +59,12 @@ public class DayFragment extends Fragment {
 
 
     /**
-     *
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
+     * Create the fragment view and attach event listeners
+     * @param inflater used to build the view from the associated layout
+     * @param container The container of the fragment
+     * @param savedInstanceState A bundle that may contain arguments passed from the parent
+     *                           view
+     * @return The newly created view
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

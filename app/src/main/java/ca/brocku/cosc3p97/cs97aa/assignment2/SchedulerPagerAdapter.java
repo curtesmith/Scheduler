@@ -28,22 +28,33 @@ public class SchedulerPagerAdapter extends FragmentStatePagerAdapter {
 
 
     /**
-     *
-     * @param i
-     * @return
+     * Retrieve the item desired as specified by the index parameter
+     * @param index The index of the desired item in the fragments list
+     * @return the desired fragment object
      */
     @Override
-    public Fragment getItem(int i) {
-        return fragments.get(i);
+    public Fragment getItem(int index) {
+        return fragments.get(index);
     }
 
+
+    /**
+     * Retrieve the number of items in the fragment list
+     * @return the count as an integer
+     */
     @Override
     public int getCount() {
         return fragments.size();
     }
 
+
+    /**
+     * Retrieve the page title
+     * @param position The position in the list
+     * @return The title of the page associated with the position passed as an argument
+     */
     @Override
     public CharSequence getPageTitle(int position) {
-        return "OBJECT " + (position + 1);
+        return "FRAGMENT " + (position + 1);
     }
 }

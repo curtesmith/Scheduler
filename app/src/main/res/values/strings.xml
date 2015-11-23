@@ -6,8 +6,10 @@
     <string name="action_delete_expired">Delete Expired</string>
     <string name="action_delete_today">Delete Today</string>
     <string name="action_delete_all">Delete All</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_create">Create</string>
+    <string name="button_invite">Invite</string>
 
-<!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string-array name="durations_array">
         <item>0</item>

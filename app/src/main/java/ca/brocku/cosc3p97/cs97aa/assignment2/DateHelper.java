@@ -1,6 +1,7 @@
 package ca.brocku.cosc3p97.cs97aa.assignment2;
 
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,8 +11,14 @@ import java.util.Date;
  * that is consumed by the application.
  */
 public class DateHelper {
-    private static final String DATE_LONG_FORMAT = "MMMM d, yyyy";
-    private static final String DATE_SHORT_FORMAT = "yyyy-MM-dd";
+    public static final String DATE_LONG_FORMAT = "MMMM d, yyyy";
+    public static final String DATE_SHORT_FORMAT = "yyyy-MM-dd";
+    public static final String TIME_FORMAT = "kk:mm";
+    public static final int YEAR_INDEX = 0;
+    public static final int MONTH_INDEX = 1;
+    public static final int DAY_INDEX = 2;
+    public static final int HOUR_INDEX = 0;
+    public static final int MINUTE_INDEX = 1;
 
 
     /**
@@ -61,7 +68,7 @@ public class DateHelper {
      * Format a date provided as a parameter into the long date format
      * (ex. January 1, 2016).
      * @param date The date to be formatted
-     * @return The string representation of the date
+     * @return The string representation of the date in the desired format
      */
     private static String formatLongDate(Calendar date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_LONG_FORMAT);
@@ -72,12 +79,23 @@ public class DateHelper {
     /**
      * Format a date provided as a parameter into the short date format
      * (ex. 2016-01-01).
-     * @param date
-     * @return
+     * @param date The date object that contains the date to be formatted
+     * @return The string representation of the date in the desired format
      */
     public static String formatShortDate(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_SHORT_FORMAT);
         return dateFormat.format(date);
+    }
+
+
+    /**
+     * Format a time provided as a parameter into the time format (ex. 10:15)
+     * @param time The date object that contains the time to be formatted
+     * @return The string representation of the time in the desired format
+     */
+    public static String formatTime(Date time) {
+        SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT);
+        return timeFormat.format(time);
     }
 
 
@@ -112,4 +130,95 @@ public class DateHelper {
         return calendar.getTime();
     }
 
+
+    /**
+     * Split the time passed as a string argument into 2 integers which represent the hours and
+     * minutes of the time value
+     * @param timeString The time value to be split
+     * @return The integer array which contains to the 2 integers
+     */
+    public static int[] splitTime(String timeString) {
+        SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT);
+        int[] ints = new int[2];
+
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(timeFormat.parse(timeString));
+            ints[HOUR_INDEX] = calendar.get(Calendar.HOUR_OF_DAY);
+            ints[MINUTE_INDEX] = calendar.get(Calendar.MINUTE);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return ints;
+    }
+
+
+    /**
+     * Split the date passed as a string argument into 3 integers which represent the year,
+     * month and day of the date value
+     * @param dateString The date value to be split
+     * @return The integer array which contains to the 3 integers
+     */
+    public static int[] splitDate(String dateString) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_SHORT_FORMAT);
+        int[] ints = new int[3];
+
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dateFormat.parse(dateString));
+            ints[YEAR_INDEX] = calendar.get(Calendar.YEAR);
+            ints[MONTH_INDEX] = calendar.get(Calendar.MONTH) + 1;
+            ints[DAY_INDEX] = calendar.get(Calendar.DAY_OF_MONTH);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return ints;
+
+    }
+
+
+    /**
+     * Convert a set of integers passed as calendar date arguments into a Date object
+     * @param year The year value of the date
+     * @param month The month value of the date
+     * @param day The day value of the date
+     * @return The Date object representation of the integers provided
+     */
+    public static Date dateFromInts(int year, int month, int day) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-M-d");
+        String dateString = String.format("%d-%d-%d", year, month+1, day);
+        Date date = null;
+
+        try {
+            date = dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return date;
+    }
+
+
+    /**
+     * Convert a set of integers passed as time arguments into a Date object
+     * @param hour The hour associated with the time
+     * @param minute The minute associated with the time
+     * @return The Date object which is a representation of the time associated with the
+     * integers passed as arguments
+     */
+    public static Date timeFromInts(int hour, int minute) {
+        String timeString = String.format("%d:%d", hour, minute);
+        SimpleDateFormat timeFormat = new SimpleDateFormat("k:m");
+        Date time = null;
+
+        try {
+            time = timeFormat.parse(timeString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return time;
+    }
 }

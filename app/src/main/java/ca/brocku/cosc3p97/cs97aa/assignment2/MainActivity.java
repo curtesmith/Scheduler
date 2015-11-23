@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
-    public void onDialogPositiveClick(String title) {
+    public void onDialogPositiveClick() {
         Toast.makeText(this, "The meeting has been created", Toast.LENGTH_SHORT).show();
         setTitle(DateHelper.getTodayLongDate());
         loadPager();

@@ -21,8 +21,8 @@ public class MeetingsListAdapter extends BaseAdapter {
 
     /**
      * Constructor to create a new instance of the class
-     * @param activity
-     * @param list
+     * @param activity  The calling activity
+     * @param list A list of MeetingsListItems
      */
     public MeetingsListAdapter(Activity activity, List<MeetingsListItem> list) {
         this.activity = activity;
