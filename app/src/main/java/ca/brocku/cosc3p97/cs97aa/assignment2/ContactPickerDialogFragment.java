@@ -58,7 +58,7 @@ public class ContactPickerDialogFragment extends DialogFragment implements OnChe
 
     /**
      * Create the dialog so that it can be displayed to the user
-     * @param savedInstanceState A set of arguments passed from the caller
+     * @param savedInstanceState The last saved instance of the fragment
      * @return A reference to the dialog
      */
     @NonNull

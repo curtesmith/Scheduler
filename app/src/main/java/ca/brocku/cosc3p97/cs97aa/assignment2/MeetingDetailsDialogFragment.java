@@ -58,7 +58,7 @@ public class MeetingDetailsDialogFragment extends DialogFragment
 
     /**
      * Builds the DialogFragment
-     * @param savedInstanceState A set of arguments provided by a calling view
+     * @param savedInstanceState The last saved instance of the fragment
      * @return An instance of the new DialogFragment
      */
     @NonNull

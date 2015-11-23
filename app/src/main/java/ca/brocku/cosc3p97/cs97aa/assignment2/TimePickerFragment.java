@@ -39,7 +39,7 @@ public class TimePickerFragment extends DialogFragment
 
     /**
      * Build the time picker dialog
-     * @param savedInstanceState A set of arguments passed from the caller
+     * @param savedInstanceState The last saved instance of the fragment
      * @return A instance of the time picker dialog
      */
     @NonNull

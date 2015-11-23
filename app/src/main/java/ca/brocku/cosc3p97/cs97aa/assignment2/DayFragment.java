@@ -62,8 +62,7 @@ public class DayFragment extends Fragment {
      * Create the fragment view and attach event listeners
      * @param inflater used to build the view from the associated layout
      * @param container The container of the fragment
-     * @param savedInstanceState A bundle that may contain arguments passed from the parent
-     *                           view
+     * @param savedInstanceState The last saved instance of the fragment
      * @return The newly created view
      */
     @Override

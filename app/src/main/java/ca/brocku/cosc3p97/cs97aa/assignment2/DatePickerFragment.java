@@ -37,7 +37,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
     /**
      * Build the data picker dialog and provide it with an initial value
-     * @param savedInstanceState Bundle of data passed from the caller
+     * @param savedInstanceState The last saved instance of the fragment
      * @return The new date picker dialog
      */
     @NonNull
