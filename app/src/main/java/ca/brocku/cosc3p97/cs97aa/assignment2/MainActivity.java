@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * A class for the main activity of the application
+ */
 public class MainActivity extends AppCompatActivity
         implements MeetingDetailsDialogFragment.MeetingDetailsDialogListener,
         ReviewMeetingDetailsDialogFragment.ReviewMeetingDetailsDialogListener,
@@ -24,6 +27,10 @@ public class MainActivity extends AppCompatActivity
     private int currentPage = 0;
 
 
+    /**
+     * Callback invoked with the activity is created
+     * @param savedInstanceState Previously saved instance of this activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +42,10 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Load the viewpager with a list of the fragments where each element contains a list
+     * of the meetings for a calendar day
+     */
     public void loadPager() {
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         SchedulerPagerAdapter adapter = new SchedulerPagerAdapter(getSupportFragmentManager(), getFragments());
@@ -44,6 +55,11 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Build a list of fragments for the viewpager where each fragment contains a list
+     * of the meetings for a calendar day
+     * @return
+     */
     private List<Fragment> getFragments() {
         List<Fragment> list = new ArrayList<>();
         list.add(DayFragment.newInstance(this, DateHelper.getToday()));
@@ -52,6 +68,11 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Callback method used to populate the menu
+     * @param menu The menu reference associated with this activity
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -59,6 +80,12 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Callback method invoked when an option is selected from the menu
+     * of this activity
+     * @param item A reference to the item selected by the user
+     * @return A boolean result
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         SchedulerDbHelper dbHelper = new SchedulerDbHelper(this);
@@ -109,6 +136,10 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Callback invoked when the MeetingDetailsDialogFragment has its positive button
+     * clicked to indicate a meeting has been created
+     */
     @Override
     public void onDialogPositiveClick() {
         Toast.makeText(this, "The meeting has been created", Toast.LENGTH_SHORT).show();
@@ -117,12 +148,23 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Callback method invoked when the viewpager onPageScrolled event is fired.
+     * For the purposes of this application it is being ignored.
+     * @param position Position
+     * @param positionOffset Offset
+     * @param positionOffsetPixels OffsetPixels
+     */
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         //ignore
     }
 
 
+    /**
+     * Callback invoked with the viewpage has been navigated to a new page
+     * @param position The index of the new page
+     */
     @Override
     public void onPageSelected(int position) {
         currentPage = position;
@@ -135,12 +177,21 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Callback method invoked when the viewpager onPageScrollStateChanged event
+     * is fired. For the purposes of this application it is being ignored.
+     * @param state State
+     */
     @Override
     public void onPageScrollStateChanged(int state) {
         //ignore
     }
 
 
+    /**
+     * Callback method invoked when the ReviewMeetingDetailsDialogFragment has
+     * its positive button clicked to indicate that a meeting has been deleted
+     */
     @Override
     public void onReviewMeetingDialogPositiveClick() {
         Toast.makeText(this, "The meeting has been deleted", Toast.LENGTH_SHORT).show();
