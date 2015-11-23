@@ -1,9 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_margin="15dp">
+    android:layout_margin="30dp"
+    android:padding="15dp">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -12,8 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:hint="Enter the meeting title"
-        android:layout_marginTop="30dp" />
+        android:hint="@string/edit_title_hint" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,7 +33,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/dateTextView"
             android:text="9999-99-99"
@@ -44,7 +43,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/datePickerImageButton"
-            android:src="@drawable/calendar_ico" />
+            android:src="@drawable/calendar_ico"
+            android:background="@android:color/white" />
     </LinearLayout>
 
     <LinearLayout
@@ -60,14 +60,14 @@
             android:layout_weight="1"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:gravity="right"
-            android:text="Time:"
+            android:text="@string/time_label"
             android:id="@+id/timeLabelTextView"
             android:layout_marginRight="10dp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:gravity="left"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/timeTextView"
@@ -77,7 +77,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/timePickerImageButton"
-            android:src="@drawable/clock_ico" />
+            android:src="@drawable/clock_ico"
+            android:background="@android:color/white" />
 
     </LinearLayout>
 
@@ -87,16 +88,16 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="10dp"
         android:gravity="center_vertical">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:gravity="right"
-            android:text="Duration (mins):"
+            android:text="@string/duration_label"
             android:id="@+id/durationLabelTextView"
             android:layout_marginRight="10dp" />
 
@@ -115,29 +116,43 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-
+        android:gravity="center_vertical"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
         <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Contacts:"
+            android:text="@string/invitees_label"
             android:id="@+id/contactsLabelTextView"
             android:layout_weight="1"
-            android:allowUndo="true" />
+            android:allowUndo="true"
+            android:gravity="center_horizontal" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/contactsImageButton"
+            android:src="@drawable/contacts_ico"
+            android:background="@android:color/white" />
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
+
 
         <ListView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/contactsListView"
-            android:layout_weight="1" />
+            android:layout_weight="2" />
 
-        <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/contactsImageButton"
-            android:layout_weight="1"
-            android:src="@drawable/contacts_ico" />
     </LinearLayout>
 
 </LinearLayout>

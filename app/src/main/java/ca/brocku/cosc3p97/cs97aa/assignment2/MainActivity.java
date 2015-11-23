@@ -1,5 +1,7 @@
 package ca.brocku.cosc3p97.cs97aa.assignment2;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -88,7 +90,7 @@ public class MainActivity extends AppCompatActivity
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        SchedulerDbHelper dbHelper = new SchedulerDbHelper(this);
+        final SchedulerDbHelper dbHelper = new SchedulerDbHelper(this);
 
         switch (item.getItemId()) {
             case R.id.action_create:
@@ -103,32 +105,73 @@ public class MainActivity extends AppCompatActivity
                 return true;
 
             case R.id.action_push_today:
-                Date fromDate = new Date();
-                dbHelper.push(fromDate, DateHelper.getNextDate(fromDate));
-                dbHelper.close();
-                loadPager();
-                Toast.makeText(this, "Today's meetings have been pushed", Toast.LENGTH_SHORT).show();
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.confirm_title)
+                        .setMessage(R.string.message_confirm_push_today)
+                        .setPositiveButton(R.string.button_push_today, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Date fromDate = new Date();
+                                dbHelper.push(fromDate, DateHelper.getNextDate(fromDate));
+                                dbHelper.close();
+                                loadPager();
+                                Toast.makeText(getApplicationContext(), R.string.message_push, Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton(R.string.button_cancel, null)
+                        .show();
+                ;
                 return true;
 
             case R.id.action_delete_expired:
-                dbHelper.deleteBefore(new Date());
-                dbHelper.close();
-                loadPager();
-                Toast.makeText(this, "Expired meetings have been deleted", Toast.LENGTH_SHORT).show();
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.confirm_title)
+                        .setMessage(R.string.message_confirm_delete_expired)
+                        .setPositiveButton(R.string.button_delete_expired, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dbHelper.deleteBefore(new Date());
+                                dbHelper.close();
+                                loadPager();
+                                Toast.makeText(getApplicationContext(), R.string.message_expired, Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton(R.string.button_cancel, null)
+                        .show();
                 return true;
 
             case R.id.action_delete_today:
-                dbHelper.delete(new Date());
-                dbHelper.close();
-                loadPager();
-                Toast.makeText(this, "Today's meetings have been deleted", Toast.LENGTH_SHORT).show();
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.confirm_title)
+                        .setMessage(R.string.message_confirm_delete_today)
+                        .setPositiveButton(R.string.button_delete_today, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dbHelper.delete(new Date());
+                                dbHelper.close();
+                                loadPager();
+                                Toast.makeText(getApplicationContext(), R.string.message_delete_today, Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton(R.string.button_cancel, null)
+                        .show();
                 return true;
 
             case R.id.action_delete_all:
-                dbHelper.deleteAll();
-                dbHelper.close();
-                loadPager();
-                Toast.makeText(this, "All meetings have been deleted", Toast.LENGTH_SHORT).show();
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.confirm_title)
+                        .setMessage(R.string.message_confirm_delete_all)
+                        .setPositiveButton(R.string.button_delete_all, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dbHelper.deleteAll();
+                                dbHelper.close();
+                                loadPager();
+                                Toast.makeText(getApplicationContext(), R.string.message_delete_all, Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton(R.string.button_cancel, null)
+                        .show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -142,7 +185,7 @@ public class MainActivity extends AppCompatActivity
      */
     @Override
     public void onDialogPositiveClick() {
-        Toast.makeText(this, "The meeting has been created", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.message_created, Toast.LENGTH_SHORT).show();
         setTitle(DateHelper.getTodayLongDate());
         loadPager();
     }
@@ -194,7 +237,7 @@ public class MainActivity extends AppCompatActivity
      */
     @Override
     public void onReviewMeetingDialogPositiveClick() {
-        Toast.makeText(this, "The meeting has been deleted", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.message_deleted, Toast.LENGTH_SHORT).show();
         loadPager();
     }
 }

@@ -6,12 +6,31 @@
     <string name="action_delete_expired">Delete Expired</string>
     <string name="action_delete_today">Delete Today</string>
     <string name="action_delete_all">Delete All</string>
+    <string name="edit_title_hint">Enter a meeting title</string>
+    <string name="date_label">Date:</string>
+    <string name="time_label">Time:</string>
+    <string name="duration_label">Duration(mins):</string>
+    <string name="invitees_label">Invitees:</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_create">Create</string>
     <string name="button_invite">Invite</string>
     <string name="button_delete">Delete</string>
+    <string name="button_push_today">Push Today</string>
+    <string name="button_delete_expired">Delete Expired</string>
+    <string name="button_delete_today">Delete Today</string>
+    <string name="button_delete_all">Delete All</string>
+    <string name="message_push">Today\'s meetings have been pushed</string>
+    <string name="message_expired">Expired meetings have been deleted</string>
+    <string name="message_delete_today">Today\'s meetings have been deleted</string>
+    <string name="message_delete_all">All meetings have been deleted</string>
+    <string name="message_confirm_push_today">Are you sure you want to push out meetings scheduled for today?</string>
+    <string name="message_confirm_delete_today">Are you sure you want to delete meetings scheduled for today?</string>
+    <string name="message_confirm_delete_all">Are you sure you want to delete all meetings?</string>
+    <string name="message_confirm_delete_expired">Are you sure you want to delete expired meetings?</string>
+    <string name="message_created">The meeting has been created</string>
+    <string name="message_deleted">The meeting has been deleted</string>
+    <string name="confirm_title">Confirm Please</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string-array name="durations_array">
         <item>0</item>
         <item>15</item>

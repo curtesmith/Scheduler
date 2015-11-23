@@ -140,7 +140,7 @@ public class MeetingDetailsDialogFragment extends DialogFragment
     private void buildContactsPicker(View view, View.OnClickListener listener) {
         ListView contactsListView = (ListView) view.findViewById(R.id.contactsListView);
         ArrayAdapter<String> contactsAdapter = new ArrayAdapter<>(view.getContext(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, new String[]{"nobody"});
+                android.R.layout.simple_list_item_1, android.R.id.text1, new String[]{});
         contactsListView.setAdapter(contactsAdapter);
 
         ImageButton contactPickerButton = (ImageButton) view.findViewById(R.id.contactsImageButton);

@@ -11,7 +11,7 @@ import java.util.Date;
  * that is consumed by the application.
  */
 public class DateHelper {
-    public static final String DATE_LONG_FORMAT = "MMMM d, yyyy";
+    public static final String DATE_LONG_FORMAT = "MMM d, yyyy";
     public static final String DATE_SHORT_FORMAT = "yyyy-MM-dd";
     public static final String TIME_FORMAT = "kk:mm";
     public static final int YEAR_INDEX = 0;
