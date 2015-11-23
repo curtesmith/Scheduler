@@ -15,6 +15,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * A class to facilitate database interaction with sqlite
+ */
 public class SchedulerDbHelper extends SQLiteOpenHelper {
     SQLiteDatabase db;
     Context context;
@@ -30,16 +33,34 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
     private static final String NAME_COLUMN_NAME = "name";
 
 
+    /**
+     * Constructor for the class
+     * @param context The context passed from the caller
+     * @param name The name of the database
+     * @param factory A cursor factory
+     * @param version The version of the database
+     */
     public SchedulerDbHelper(Context context, String name, CursorFactory factory, int version) {
         super(context, name, factory, version);
         db = getWritableDatabase();
     }
 
+
+    /**
+     * Simplified overloaded constructor
+     * @param context The context passed from the caller
+     */
     public SchedulerDbHelper(Context context) {
         this(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
     }
 
+
+    /**
+     * Callback that is invoked with the creation which is used here to initialize the
+     * tables of the database
+     * @param db An instance of the sqlite database that has been created
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
 
@@ -64,6 +85,10 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
     }
 
 
+    /**
+     * utility method created to fill up the tables with some sample data used for testing
+     * @param db An instance of the sqlitedatabase
+     */
     public void fill(SQLiteDatabase db) {
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
@@ -114,6 +139,12 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
     }
 
 
+    /**
+     * Retrieve a list of meetings from the database where the meeting date matches
+     * the date that is passed as a parameter
+     * @param date The date to match
+     * @return A list of meetings
+     */
     public List<MeetingsListItem> selectFromMeetings(String date) {
         final Cursor cursor = db.rawQuery("select rowid, date(" + DATE_COLUMN_NAME +
                 ") as meeting_date, strftime('%H:%M', " + TIME_COLUMN_NAME +
@@ -140,6 +171,11 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
     }
 
 
+    /**
+     * Retrieve a list of invitees matching on the meetingID that is passed as a paramter
+     * @param meetingID Identified of the meeting used to query for a list of invited contacts
+     * @return A list of invited contacts
+     */
     private ArrayList<String> selectFromInvitees(int meetingID) {
         final Cursor cursor = db.rawQuery("select " + NAME_COLUMN_NAME + " from " + INVITEES_TABLE_NAME +
                 " where " + MEETING_ID_COLUMN_NAME + " = " + meetingID + " ORDER BY " + NAME_COLUMN_NAME + " ASC", new String[]{});
@@ -157,6 +193,15 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
         return invitees;
     }
 
+
+    /**
+     * Insert a new meeting into the database
+     * @param title A title for the meeting
+     * @param date The date of the meeting
+     * @param time The time of the meeting
+     * @param duration The duration of the meeting
+     * @param invitees The list of contacts that are invited to the meeting
+     */
     public void insert(String title, String date, String time, Integer duration, List<ContactsListItem> invitees) {
         ContentValues values = new ContentValues();
         Calendar calendar = Calendar.getInstance();
@@ -186,18 +231,33 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
     }
 
 
+    /**
+     * Delete a meeting from the database
+     * @param id Identifier of the meeting
+     */
     public void delete(int id) {
         db.delete(INVITEES_TABLE_NAME, MEETING_ID_COLUMN_NAME + "=" + id, null);
         db.delete(MEETINGS_TABLE_NAME, "rowid=" + id, null);
     }
 
 
+    /**
+     * Delete all meetings that where scheduled to have taken place prior to the date that
+     * is passed as a parameter
+     * @param date The date used to compare to
+     */
     public void deleteBefore(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         db.execSQL("DELETE FROM invitees WHERE invitees.meeting_id IN (SELECT meetings.rowid FROM meetings LEFT JOIN invitees ON meetings.rowid = invitees.meeting_id WHERE meetings.meeting_date <'" + dateFormat.format(date) + "')");
         db.execSQL("DELETE FROM meetings WHERE meeting_date < '" + dateFormat.format(date) + "'");
     }
 
+
+    /**
+     * Delete all the meetings that were scheduled to take place on the date
+     * that is passed as a parameter
+     * @param date The date used to compare to
+     */
     public void delete(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -206,49 +266,21 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
     }
 
 
+    /**
+     * Delete all the invitees and meetings from the database
+     */
     public void deleteAll() {
         db.execSQL("DELETE FROM invitees;");
         db.execSQL("DELETE FROM meetings;");
     }
 
 
-    private String dumpCursorAsString(Cursor cursor) {
-        ArrayList<String> list = dumpCursor(cursor);
-        StringBuilder result = new StringBuilder();
-        for(int i=0; i<list.size(); i++) {
-            result.append("[");
-            result.append(list.get(i));
-            result.append("]");
-        }
-
-        return result.toString();
-    }
-
-    private ArrayList<String> dumpCursor(Cursor cursor) {
-        String[] columns = new String[cursor.getColumnCount()];
-        for (int i = 0; i < cursor.getColumnCount(); i++) {
-            columns[i] = cursor.getColumnName(i);
-        }
-
-        boolean more = cursor.moveToFirst();
-        ArrayList<String> result = new ArrayList<>();
-        while (more) {
-            StringBuilder line = new StringBuilder();
-            for (String column : columns) {
-                line.append("{");
-                line.append(column);
-                line.append("=");
-                line.append(cursor.getString(cursor.getColumnIndex(column)));
-                line.append("}");
-            }
-            result.add(line.toString());
-            more = cursor.moveToNext();
-        }
-
-        return result;
-    }
-
-
+    /**
+     * Push all meetings scheduled to occur on the fromDate passed as a parameter
+     * and reschedule them to take place on the toDate passed as a parameter
+     * @param fromDate A date that meetings were scheduled
+     * @param toDate A date that the meetings need to be rescheduled
+     */
     public void push(Date fromDate, Date toDate) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -258,8 +290,14 @@ public class SchedulerDbHelper extends SQLiteOpenHelper {
     }
 
 
+    /**
+     * Callback method invoked when the database version has been modified
+     * @param db The instance of the database
+     * @param oldVersion The previous version #
+     * @param newVersion The next version #
+     */
     @Override
-    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onCreate(db);
     }
 }
